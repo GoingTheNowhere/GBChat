@@ -14,7 +14,7 @@ public interface Server {
 
     void unsubscribe(ClientHandler client);
 
-    AuthService getAuthService();
+    String getNick(String login, String password);
 
     void sendMsgToClient(ClientHandler sender, String receiver, String msg);
 

@@ -71,8 +71,8 @@ public class ServerImpl implements Server {
 
 
     @Override
-    public AuthService getAuthService() {
-        return authService;
+    public String getNick(String login, String password) {
+        return authService.getNick(login, password);
     }
 
     // Метод отсылки приватного сообщения

@@ -55,7 +55,7 @@ public class ClientHandler {
             String str = dis.readUTF();
             if (str.startsWith("/auth")) {
                 String[] dataArray = str.split("\\s");
-                String nick = server.getAuthService().getNick(dataArray[1], dataArray[2]);
+                String nick = server.getNick(dataArray[1], dataArray[2]);
                 if (nick != null) {
                     if (!server.isNickBusy(nick)) {
                         sendMsg("/authOk " + nick);
