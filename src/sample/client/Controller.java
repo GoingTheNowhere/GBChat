@@ -6,10 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Controller {
@@ -18,6 +18,7 @@ public class Controller {
     private DataInputStream dis;
     private DataOutputStream dos;
     private String myNick;
+    private File localMessageHistory = new File("history.txt");
 
     @FXML
     TextArea mainTextArea;
@@ -26,16 +27,17 @@ public class Controller {
     TextField textField;
 
     public Controller() {
+
     }
 
     public void start() {
-        myNick = "";
 
+        myNick = "";
         try {
             socket = new Socket("localhost", 8189);
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
-
+            loadHistory();
             Thread t1 = new Thread(() -> {
                 try {
                     while (true) {
@@ -51,6 +53,7 @@ public class Controller {
                         if (strMsg.equals("/exit")) {
                             break;
                         }
+                        writeMessageToHistory(strMsg);
                         mainTextArea.appendText(strMsg + "\n");
                     }
                 } catch (IOException e) {
@@ -89,4 +92,44 @@ public class Controller {
             System.out.println("По техническим причинам сообщение не было отправлено");
         }
     }
+    void loadHistory() throws FileNotFoundException {
+        BufferedReader bufferedReader = new BufferedReader
+                (new InputStreamReader
+                        (new FileInputStream
+                                (localMessageHistory)
+                        )
+                );
+
+        List<String> messageHistory = new ArrayList<>();
+        String message;
+        try {
+            while ((message = bufferedReader.readLine()) != null) {
+                messageHistory.add(message);
+            }
+        } catch (Exception e){
+
+        }
+        int messagesForShow = 100;
+        for (int i = messageHistory.size() > messagesForShow ?
+                     messageHistory.size() - messagesForShow :
+                     0;
+             i < messageHistory.size();
+             i++) {
+            mainTextArea.appendText(messageHistory.get(i) + "\n");
+        }
+    }
+
+    void writeMessageToHistory(String message){
+        try (BufferedWriter bf = new BufferedWriter
+                (new PrintWriter
+                        (new FileWriter
+                                (localMessageHistory, true)));
+                )
+        {
+            bf.write(message + "\n");
+        } catch (IOException e) {
+
+        }
+    }
+
 }
