@@ -1,6 +1,9 @@
 package sample.server.service;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import sample.server.dao.DBConn;
+import sample.server.handler.ClientHandler;
 import sample.server.inter.AuthService;
 
 import java.sql.ResultSet;
@@ -11,10 +14,12 @@ import java.util.List;
 public class AuthServiceImpl implements AuthService {
 
     private List<User> usersList;
+    public static final Logger LOGGER = LogManager.getLogger(ClientHandler.class);
 
     public AuthServiceImpl() {
         try {
             System.out.println("Сервис аутентификации запущен.");
+            LOGGER.info("Сервис аутентификации запущен.");
             Statement statement = DBConn
                     .getInstance()
                     .getConn()
@@ -33,10 +38,13 @@ public class AuthServiceImpl implements AuthService {
             }
             for (User user : this.usersList) {
                 System.out.println("Найден и добавлен пользователь:\n" + user.toString());
+                LOGGER.info("Найден и добавлен пользователь:\n" + user.toString());
             }
             System.out.println("Данные пользователей получены из базы данных.");
+            LOGGER.info("Данные пользователей получены из базы данных.");
 
         } catch (Exception e){
+            LOGGER.warn("Ошибка сервиса аутентификации.");
             e.printStackTrace();
         }
 
@@ -56,7 +64,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void stop() {
-        System.out.println("Сервис аутентификации остановлен");
+        System.out.println("Сервис аутентификации остановлен.");
+        LOGGER.info("Сервис аутентификации остановлен.");
     }
 
     private class User {

@@ -1,5 +1,7 @@
 package sample.server.service;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import sample.server.handler.ClientHandler;
 import sample.server.inter.AuthService;
 import sample.server.inter.Server;
@@ -14,6 +16,7 @@ public class ServerImpl implements Server {
 
     private List<ClientHandler> clients;
     private AuthService authService;
+    public static final Logger LOGGER = LogManager.getLogger(ClientHandler.class);
 
     public ServerImpl() {
         try {
@@ -25,10 +28,12 @@ public class ServerImpl implements Server {
                 System.out.println("Ожидаем подключения клиентов");
                 Socket socket = serverSocket.accept(); // Ожидание подключения клиента
                 System.out.println("Клиент подключился");
+                LOGGER.info("Клиент подключился.");
                 new ClientHandler(this, socket); // Создаем для каждого клиент свой обработчик
             }
         } catch (IOException e) {
             System.out.println("Проблема на сервере");
+            LOGGER.warn("Клиент подключился.");
         } finally {
             if (authService != null) {
                 authService.stop(); // Сообщение об остановке сервера аутентификации
