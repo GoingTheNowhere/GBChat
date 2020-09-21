@@ -14,7 +14,7 @@ import java.util.List;
 public class AuthServiceImpl implements AuthService {
 
     private List<User> usersList;
-    public static final Logger LOGGER = LogManager.getLogger(ClientHandler.class);
+    public static final Logger LOGGER = LogManager.getLogger(AuthServiceImpl.class);
 
     public AuthServiceImpl() {
         try {

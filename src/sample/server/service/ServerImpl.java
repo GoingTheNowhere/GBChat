@@ -16,7 +16,7 @@ public class ServerImpl implements Server {
 
     private List<ClientHandler> clients;
     private AuthService authService;
-    public static final Logger LOGGER = LogManager.getLogger(ClientHandler.class);
+    public static final Logger LOGGER = LogManager.getLogger(ServerImpl.class);
 
     public ServerImpl() {
         try {
